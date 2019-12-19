@@ -1,0 +1,79 @@
+# Golang
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+*ttt*
+
+# etcd/.gitignore 
+/coverage
+/covdir
+/release
+/bin
+*.log
+*.coverprofile
+hack/tls-setup/certs
+.idea
+*.bak
+
+#helm
+.DS_Store
+.coverage/
+.idea/
+.vimrc
+.vscode/
+/docs/helm
+/docs/man
+_dist/
+bin/
+
+#hugo
+docs/public*
+/.idea
+*.test
+*.prof
+nohup.out
+cover.out
+*.swp
+*.swo
+.DS_Store
+*~
+vendor/*/
+*.bench
+*.debug
+coverage*.out
+
+dock.sh
+
+GoBuilds
+dist
+
+# certs
+/certs
+*.crt
+*.cert
+*.csr
+*.key
+*.pem
+/.blackbox/pubring.gpg~
+/.blackbox/pubring.kbx~
+/.blackbox/secring.gpg
+
+token
+
+
+# this
+jwt-token
+
