@@ -75,5 +75,7 @@ token
 
 # this
 jwt-token
+*token
 vendor
+log.json
 
