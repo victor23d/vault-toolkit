@@ -33,6 +33,8 @@ export TOKEN_PATH="" # this is your jwt token path
 TODO
 Print all secrets
 Use case: streaming/pipeline/search all secrets content like | grep
+
 rsync download/upload/update/delete secrets reflect directory structure
 Use case: secrets batch job
 
+Dump/Restore to db

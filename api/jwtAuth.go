@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -33,11 +32,10 @@ func Login() string {
 	requestURL := vaultAddr + "/v1/auth/" + "kubernetes" + "/login"
 	log.Info(requestURL)
 
-	tokenPath := os.Getenv("TOKEN_PATH")
-	if tokenPath == "" {
-		tokenPath = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+	if tokenURL == "" {
+		tokenURL = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 	}
-	jwtToken, err := ioutil.ReadFile(tokenPath)
+	jwtToken, err := ioutil.ReadFile(tokenURL)
 	if err != nil {
 		log.Error("set environment TOKEN_PATH")
 		log.Error(err)
