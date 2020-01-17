@@ -11,12 +11,13 @@ import (
 	"strings"
 )
 
+// GetAllSecret returns the secrets in the PATH "PROJECT/ENV/*"
 func GetAllSecret() map[string]interface{} {
 	allSecrets := make(map[string]interface{})
 	config := api.Config{Address: vaultAddr}
 	client, err := api.NewClient(&config)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	client.SetToken(vaultToken)
 
@@ -28,15 +29,15 @@ func GetAllSecret() map[string]interface{} {
 
 	secrets, err := client.Logical().List(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 	if secrets == nil {
-		log.Fatalw("xx_vault", "List secrets", secrets)
+		log.Errorw("xx_vault", "List secrets", secrets)
 	}
 	if secrets.Data == nil {
 		log.Errorw("xx_vault", "List secrets", secrets)
-		log.Fatalw("xx_vault", "Can not retrieve secret list, secrets.Data", secrets.Data)
+		log.Errorw("xx_vault", "Can not retrieve secret list, secrets.Data", secrets.Data)
 	}
 	fmt.Printf("\nkeys list: %s\n", secrets.Data["keys"])
 
@@ -46,13 +47,13 @@ func GetAllSecret() map[string]interface{} {
 		//log.Infow("xx_vault", "path", path)
 		secret, err := client.Logical().Read(path)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 		if secrets == nil {
-			log.Fatalw("xx_vault", "secrets is nil", secret)
+			log.Errorw("xx_vault", "secrets is nil", secret)
 		}
 		if secrets.Data == nil {
-			log.Fatalw("xx_vault", "secrets.Data is nil", secrets.Data)
+			log.Errorw("xx_vault", "secrets.Data is nil", secrets.Data)
 		}
 		//log.Info(secret.Data)
 		// combine all json
@@ -90,7 +91,7 @@ func logAllSecret(secretMap map[string]interface{}) {
 	}
 	hideJson, err := json.MarshalIndent(hideMap, "", "    ")
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	fmt.Println(string(hideJson))
 }
@@ -111,7 +112,7 @@ func WriteCredential(secretMap map[string]interface{}) string {
 				dir := "/secrets/" + dirName + "/"
 				path = dir + k
 				if err := os.MkdirAll(dir, 0755); err != nil {
-					log.Fatal(err)
+					log.Error(err)
 				}
 				err = ioutil.WriteFile(path, content, 0644)
 				if err != nil {
@@ -122,7 +123,7 @@ func WriteCredential(secretMap map[string]interface{}) string {
 				dir := "/secrets/" + XX_PROJECT_ENV + "/"
 				path = dir + k
 				if err := os.MkdirAll(dir, 0755); err != nil {
-					log.Fatal(err)
+					log.Error(err)
 				}
 				err = ioutil.WriteFile(path, content, 0644)
 				if err != nil {
@@ -140,16 +141,16 @@ func getAllSecretNoPath() map[string]string {
 	config := api.Config{Address: vaultAddr}
 	client, err := api.NewClient(&config)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	client.SetToken(vaultToken)
 	secrets, err := client.Logical().List(XX_PROJECT_ENV)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	if secrets == nil {
 		log.Errorw("xx_vault", "List secrets", secrets)
-		log.Fatalw("xx_vault", "Can not retrieve secret list", client)
+		log.Errorw("xx_vault", "Can not retrieve secret list", client)
 	}
 	//log.Info(secrets.Data)
 
@@ -157,10 +158,10 @@ func getAllSecretNoPath() map[string]string {
 	for _, v := range secrets.Data["keys"].([]interface{}) {
 		secret, err := client.Logical().Read(XX_PROJECT_ENV + "/" + v.(string))
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 		if secret == nil {
-			log.Fatalw("xx_vault", "secret is nil", secret)
+			log.Errorw("xx_vault", "secret is nil", secret)
 		}
 		//log.Info(secret.Data)
 		for k2, v2 := range secret.Data {
@@ -189,7 +190,7 @@ func logSecretJsonNoPath(secretMap map[string]string) {
 	}
 	hideJson, err := json.MarshalIndent(hideMap, "", "    ")
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	fmt.Println(string(hideJson))
 }
