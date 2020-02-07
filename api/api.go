@@ -14,7 +14,7 @@ import (
 
 // GetAllSecret returns the secrets in the PATH "PROJECT/ENV/*"
 func GetAllSecret() map[string]interface{} {
-	path := XX_PROJECT + "/metadata/" + XX_ENV
+	path := PROJECT + "/metadata/" + ENV
 	return GetAllSecretFromPath(path)
 }
 
@@ -37,27 +37,26 @@ func GetAllSecretFromPath(path string) map[string]interface{} {
 	}
 
 	if secrets == nil {
-		log.Errorw("xx_vault", "List secrets", secrets)
+		log.Error( "List secrets: ", secrets)
 	}
 	if secrets.Data == nil {
-		log.Errorw("xx_vault", "List secrets", secrets)
-		log.Errorw("xx_vault", "Can not retrieve secret list, secrets.Data", secrets.Data)
+		log.Error( "List secrets: ", secrets)
+		log.Error( "Can not retrieve secret list, secrets.Data: ", secrets.Data)
 	}
 	fmt.Printf("\nkeys list: %s\n", secrets.Data["keys"])
 
 	// list keys loop
 	for _, v := range secrets.Data["keys"].([]interface{}) {
-		path = XX_PROJECT + "/data/" + XX_ENV + "/" + v.(string)
-		//log.Infow("xx_vault", "path", path)
+		path = PROJECT + "/data/" + ENV + "/" + v.(string)
 		secret, err := client.Logical().Read(path)
 		if err != nil {
 			log.Error(err)
 		}
 		if secrets == nil {
-			log.Errorw("xx_vault", "secrets is nil", secret)
+			log.Error( "secrets is nil: ", secret)
 		}
 		if secrets.Data == nil {
-			log.Errorw("xx_vault", "secrets.Data is nil", secrets.Data)
+			log.Error( "secrets.Data is nil: ", secrets.Data)
 		}
 		//log.Info(secret.Data)
 		// combine all json
@@ -80,7 +79,7 @@ func logAllSecret(secretMap map[string]interface{}) {
 			switch v2 := vv2.(type) {
 			case string:
 				if len(v2) == 0 {
-					log.Errorw("xx_vault", "secret is nil", "key", k, "value", v)
+					log.Error( "secret is nil", "key", k, "value", v)
 					continue
 				}
 				if len(v2) > 40 {
@@ -112,7 +111,7 @@ func WriteCredential(secretMap map[string]interface{}) string {
 			}
 			thisUser, _ := user.Current()
 			if thisUser.Uid == "0" || runtime.GOOS == "linux" {
-				// /secrets/pubsub-admin/pubsub-admin.json
+				// /secrets/credential-test/credential-test.json
 				dir := "/secrets/" + dirName + "/"
 				path = dir + k
 				if err := os.MkdirAll(dir, 0755); err != nil {
@@ -123,8 +122,8 @@ func WriteCredential(secretMap map[string]interface{}) string {
 					log.Error(err)
 				}
 			} else {
-				// /secrets/XX_PROJECT/DEV/pubsub-admin.json
-				dir := "/secrets/" + XX_PROJECT_ENV + "/"
+				// /secrets/PROJECT/DEV/credential-test.json
+				dir := "/secrets/" + PROJECT_ENV + "/"
 				path = dir + k
 				if err := os.MkdirAll(dir, 0755); err != nil {
 					log.Error(err)
@@ -141,10 +140,12 @@ func WriteCredential(secretMap map[string]interface{}) string {
 
 
 // GetAllSecretFromParent path can not contain '/'
+// Example: secrets := GetAllSecretFromParent("PROJECT")
+// secrets will have directory end with "/", otherwise you won't know if it is a json secret or a directory.
 func GetAllSecretFromParent(path string) map[string]interface{} {
 	if strings.Contains(path, "/") {
 		// GetAllSecretFromParent path doesn't contain '/'
-		log.Errorw("xx_vault", "GetAllSecretFromParent path can not contain '/', path=", path)
+		log.Error( "GetAllSecretFromParent path can not contain '/', path=", path)
 
 	}
 	config := api.Config{Address: vaultAddr}
@@ -156,7 +157,7 @@ func GetAllSecretFromParent(path string) map[string]interface{} {
 
 	path = path + "/metadata/"
 
-	//log.Infow("xx_vault", "path", path)
+	//log.Info("path: ", path)
 
 	secrets, err := client.Logical().List(path)
 	if err != nil {
@@ -164,11 +165,11 @@ func GetAllSecretFromParent(path string) map[string]interface{} {
 	}
 
 	if secrets == nil {
-		log.Errorw("xx_vault", "List secrets", secrets)
+		log.Error( "List secrets: ", secrets)
 	}
 	if secrets.Data == nil {
-		log.Errorw("xx_vault", "List secrets", secrets)
-		log.Errorw("xx_vault", "Can not retrieve secret list, secrets.Data", secrets.Data)
+		log.Error( "List secrets: ", secrets)
+		log.Error( "Can not retrieve secret list, secrets.Data: ", secrets.Data)
 	}
 	//fmt.Printf("\nkeys list: %s\n", secrets.Data["keys"])
 
@@ -196,24 +197,24 @@ func getAllSecretNoPath() map[string]string {
 		log.Error(err)
 	}
 	client.SetToken(vaultToken)
-	secrets, err := client.Logical().List(XX_PROJECT_ENV)
+	secrets, err := client.Logical().List(PROJECT_ENV)
 	if err != nil {
 		log.Error(err)
 	}
 	if secrets == nil {
-		log.Errorw("xx_vault", "List secrets", secrets)
-		log.Errorw("xx_vault", "Can not retrieve secret list", client)
+		log.Error( "List secrets: ", secrets)
+		log.Error( "Can not retrieve secret list: ", client)
 	}
 	//log.Info(secrets.Data)
 
 	// list keys loop
 	for _, v := range secrets.Data["keys"].([]interface{}) {
-		secret, err := client.Logical().Read(XX_PROJECT_ENV + "/" + v.(string))
+		secret, err := client.Logical().Read(PROJECT_ENV + "/" + v.(string))
 		if err != nil {
 			log.Error(err)
 		}
 		if secret == nil {
-			log.Errorw("xx_vault", "secret is nil", secret)
+			log.Error( "secret is nil", secret)
 		}
 		//log.Info(secret.Data)
 		for k2, v2 := range secret.Data {
@@ -229,7 +230,7 @@ func logSecretJsonNoPath(secretMap map[string]string) {
 	hideMap := make(map[string]string)
 	for k, v := range secretMap {
 		if len(v) == 0 {
-			log.Errorw("xx_vault", "secret is nil", "key", k, "value", v)
+			log.Error( "secret is nil", "key: ", k, "value: ", v)
 			continue
 		}
 		if len(v) > 40 {
@@ -257,7 +258,7 @@ func getVaultToken(tokenURL string) string {
 		if strings.Contains("http", tokenURL) {
 			resp, err := http.Get(tokenURL)
 			if err != nil {
-				log.Errorw("xx_vault", "Get token error", err)
+				log.Error( "Get token error: ", err)
 			}
 			defer resp.Body.Close()
 
@@ -268,13 +269,13 @@ func getVaultToken(tokenURL string) string {
 				}
 				vaultToken = string(bodyBytes)
 			} else {
-				log.Errorw("xx_vault", "Can not retrieve token", resp.Status)
+				log.Error( "Can not retrieve token: ", resp.Status)
 			}
 			return vaultToken
 		} else {
 			_, err := os.Stat(tokenURL)
 			if err != nil {
-				log.Errorw("xx_vault", "vault token not found", err)
+				log.Error( "vault token not found: ", err)
 			}
 			b, err := ioutil.ReadFile(tokenURL)
 			vaultToken = string(b)

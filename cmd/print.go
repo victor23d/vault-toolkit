@@ -5,8 +5,16 @@ This file is part of {{ .appName }}.
 package cmd
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/victor23d/vault-toolkit/api"
+	"go.uber.org/zap"
+)
+
+var (
+logger, _      = zap.NewProduction()
+log            = logger.Sugar()
 )
 
 // printCmd represents the print command
@@ -22,7 +30,15 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Print All Secrets
-		_ = api.GetAllSecret()
+		secrets := api.GetAllSecret()
+		fmt.Println("================================================================================")
+		fmt.Println("================================================================================")
+
+		secretJson, err := json.MarshalIndent(secrets, "", "    ")
+		if err != nil {
+			log.Error(err)
+		}
+		fmt.Println(string(secretJson))
 
 	},
 }

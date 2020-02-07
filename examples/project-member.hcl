@@ -1,36 +1,36 @@
-path "XX_PROJECT/*" {
+path "PROJECT/*" {
   capabilities = ["read", "list"]
 }
 
-path "XX_PROJECT/data/DEV/*" {
+path "PROJECT/data/DEV/*" {
   capabilities = ["create", "update", "read", "delete"]
 }
 
-path "XX_PROJECT/metadata/DEV/" {
+path "PROJECT/metadata/DEV/" {
   capabilities = ["list"]
 }
 
-path "XX_PROJECT/data/QA/*" {
+path "PROJECT/data/QA/*" {
   capabilities = ["create", "update", "read", "delete"]
 }
 
-path "XX_PROJECT/metadata/QA/" {
+path "PROJECT/metadata/QA/" {
   capabilities = ["list"]
 }
 
-path "XX_PROJECT/data/STAGE/*" {
+path "PROJECT/data/STAGE/*" {
   capabilities = ["read"]
 }
 
-path "XX_PROJECT/metadata/STAGE/" {
+path "PROJECT/metadata/STAGE/" {
   capabilities = ["list"]
 }
 
-path "XX_PROJECT/data/PROD/*" {
+path "PROJECT/data/PROD/*" {
   capabilities = []
 }
 
-path "XX_PROJECT/metadata/PROD/" {
+path "PROJECT/metadata/PROD/" {
   capabilities = ["list"]
 }
 

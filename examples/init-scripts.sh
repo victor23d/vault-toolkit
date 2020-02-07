@@ -1,3 +1,5 @@
+
+
 ROLE=xx_project-app
 
 
@@ -26,4 +28,4 @@ vault write auth/kubernetes/role/${ROLE} bound_service_account_names=vault-auth 
 
 
 # ref: https://learn.hashicorp.com/vault/developer/vault-agent-k8s
-vault auth tune -default-lease-ttl=1m -max-lease-ttl=1m kubernetes/
+# vault auth tune -default-lease-ttl=1m -max-lease-ttl=1m kubernetes/

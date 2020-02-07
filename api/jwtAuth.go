@@ -43,7 +43,7 @@ func Login() string {
 
 	jwtAuth, err := json.Marshal(jwtAuth{
 		Jwt:  string(jwtToken),
-		Role: XX_PROJECT +  "-app",
+		Role: PROJECT +  "-app",
 	})
 	log.Info(string(jwtAuth))
 	req, err := http.NewRequest("PUT", requestURL, bytes.NewBuffer(jwtAuth))

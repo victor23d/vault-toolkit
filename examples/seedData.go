@@ -16,7 +16,7 @@ var (
 
 func main() {
 	//_ = os.Setenv("VAULT_ADDR", "http://127.0.0.1:8200")
-	//_ = os.Setenv("XX_PROJECT_ENV", "XX_PROJECT/DEV")
+	//_ = os.Setenv("PROJECT_ENV", "PROJECT/DEV")
 	//_ = os.Setenv("VAULT_REDIRECT_ADDR", "")
 	client, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
@@ -24,7 +24,7 @@ func main() {
 	}
 	deleteSecretEngine(client)
 	enableSecretEngine(client)
-	//addSecrets(client, xxEnv)
+	//addSecrets(client, Env)
 	addEnvSecrets(client, []string{"DEV","QA","STAGE","PROD"})
 
 	// test if exists
@@ -39,10 +39,10 @@ func addEnvSecrets(client *api.Client, envs []string ) {
 
 func addSecrets(client *api.Client, env string ) {
 	// kv secret engine /secret path
-	// path := "secret/data/" + XX_PROJECT + "/" + xxEnv
+	// path := "secret/data/" + PROJECT + "/" + Env
 	// /project as secret engine path
-	path := vt.XX_PROJECT + "/data/" + env
-	//v1/xxproject/data/dev/test
+	path := vt.PROJECT + "/data/" + env
+	//v1/project/data/dev/test
 
 	tokens_test := map[string]interface{}{
 		"aaa": "111",
@@ -69,29 +69,29 @@ func addSecrets(client *api.Client, env string ) {
 }
 
 func deleteSecretEngine(client *api.Client) {
-	path := "sys/mounts/" + vt.XX_PROJECT
-	//path := "sys/mounts/" + vt.XX_PROJECT_ENV
+	path := "sys/mounts/" + vt.PROJECT
+	//path := "sys/mounts/" + vt.PROJECT_ENV
 	_, err := client.Logical().Delete(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	//_, err = client.Logical().Delete(XX_PROJECT_ENV + "/tokens-test")
-	//_, err = client.Logical().Delete(XX_PROJECT_ENV + "/credential-test.json")
+	//_, err = client.Logical().Delete(PROJECT_ENV + "/tokens-test")
+	//_, err = client.Logical().Delete(PROJECT_ENV + "/credential-test.json")
 	log.Info("Delete secret engine "+ path +" OK!")
 }
 
 
 func enableSecretEngine(client *api.Client) {
-	path := "sys/mounts/" + vt.XX_PROJECT
-	//path := "sys/mounts/" + vt.XX_PROJECT_ENV
+	path := "sys/mounts/" + vt.PROJECT
+	//path := "sys/mounts/" + vt.PROJECT_ENV
 
-	payLoad := []byte(`{"path":"XX_PROJECT","type":"kv","config":{},"options":{"version":2},"generate_signing_key":true}`)
-	var enableXX_PROJECT map[string]interface{}
-	if err := json.Unmarshal(payLoad, &enableXX_PROJECT); err == nil {
+	payLoad := []byte(`{"path":"PROJECT","type":"kv","config":{},"options":{"version":2},"generate_signing_key":true}`)
+	var enablePROJECT map[string]interface{}
+	if err := json.Unmarshal(payLoad, &enablePROJECT); err == nil {
 		fmt.Errorf("%s", err)
 	}
 
-	_, err := client.Logical().Write(path, enableXX_PROJECT)
+	_, err := client.Logical().Write(path, enablePROJECT)
 	if err != nil {
 		log.Fatal(err)
 	}

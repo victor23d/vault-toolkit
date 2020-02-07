@@ -25,26 +25,6 @@ func ExampleGetAllSecret() {
 
 }
 
-func ExampleGetAllSecretFromParent() {
-
-	GetAllSecretFromParent("XX_PROJECT")
-	// Output:
-	// keys list: [credential-test.json tokens-test]
-	// {
-	//     "credential-test.json": {
-	//         "client_email": "project_id@appspot.******",
-	//         "private_key": "-----BEGIN PRIVATE K***** *****",
-	//         "private_key_id": "00000000000000000000******",
-	//         "type": "service_account******"
-	//     },
-	//     "tokens-test": {
-	//         "aaa": "111******",
-	//         "bbb": "222******"
-	//     }
-	// }
-
-}
-
 func ExampleWriteCredential() {
 	secrets := GetAllSecret()
 	path := WriteCredential(secrets)

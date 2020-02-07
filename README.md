@@ -5,7 +5,7 @@ When I learn Vault, I made some toolkits for convenience by the way.
 
 Walk through:
 ```
-export XX_PROJECT_ENV=XX_PROJECT/DEV
+export PROJECT_ENV=PROJECT/DEV
 export VAULT_ADDR=http:// ... :8200
 export VAULT_TOKEN= ...
 ```
